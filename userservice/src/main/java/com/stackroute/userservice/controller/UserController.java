@@ -38,5 +38,10 @@ public class UserController {
 	public UserResponse authenticateUser(HttpServletRequest request) {
 		return userService.authenticateUser(request);
 	}
+	
+	@RequestMapping("/logout")
+	public void logout(HttpServletRequest request) {
+		request.getSession().invalidate();
+	}
 
 }
