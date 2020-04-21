@@ -19,12 +19,12 @@ import com.stackroute.userservice.service.IUserService;
 
 /**
  * @author ubuntu
- *
+ * 
  */
-
+ 
 @RestController
 @CrossOrigin(origins = "*")
-public class UserController {
+public class UserController {  
 
 	@Autowired
 	IUserService userService;

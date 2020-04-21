@@ -10,6 +10,15 @@ package com.stackroute.userservice.dto;
 public class UserResponse {
 	private String emailId;
 	private boolean isUserAuthentic;
+	private String token;
+	
+	
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
+	}
 	public String getEmailId() {
 		return emailId;
 	}
