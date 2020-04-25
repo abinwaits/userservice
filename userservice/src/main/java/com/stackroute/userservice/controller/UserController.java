@@ -46,8 +46,17 @@ public class UserController {
 	}
 
 	@RequestMapping("/login")
-	public UserResponse authenticateUser(HttpServletRequest request) {
-		return userService.authenticateUser(request);
+	public ResponseEntity<UserResponse> authenticateUser(HttpServletRequest request) {
+		ResponseEntity<UserResponse> responseEntity = null;
+		UserResponse userResponse=userService.authenticateUser(request);
+		if (userResponse != null) {
+			if (userResponse.getHttpStatus() == 200) {
+				responseEntity = new ResponseEntity(userResponse, HttpStatus.OK);
+			} else if (userResponse.getHttpStatus() == 400) {
+				responseEntity = new ResponseEntity(userResponse, HttpStatus.BAD_REQUEST);
+			}
+		}
+		return responseEntity;
 	}
 
 	@RequestMapping("/logout")

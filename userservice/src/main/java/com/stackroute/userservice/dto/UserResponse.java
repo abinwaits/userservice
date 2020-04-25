@@ -11,8 +11,22 @@ public class UserResponse {
 	private String emailId;
 	private boolean isUserAuthentic;
 	private String token;
+	private Integer httpStatus;
+	private String fullName;
 	
-	
+		
+	public Integer getHttpStatus() {
+		return httpStatus;
+	}
+	public void setHttpStatus(Integer httpStatus) {
+		this.httpStatus = httpStatus;
+	}
+	public String getFullName() {
+		return fullName;
+	}
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 	public String getToken() {
 		return token;
 	}

@@ -23,14 +23,20 @@ public class ServiceFacade {
 
 	public String getJWTToken(String userName, String password) {
 		String token = "";
-		StringBuilder finalURI = new StringBuilder(favouriteServiceURI).append("/authenticate/").append(userName)
-				.append("/").append(password);
-		System.out.println("Final URL >>" + finalURI.toString());
-		HttpHeaders headers = getHeaders();
-		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-		ResponseEntity<String> response = restTemplate.exchange(finalURI.toString(), HttpMethod.POST, entity,
-				String.class);
-		token = response.getBody();
+		try {
+			StringBuilder finalURI = new StringBuilder(favouriteServiceURI).append("/authenticate/").append(userName)
+					.append("/").append(password);
+			System.out.println("Final URL >>" + finalURI.toString());
+			HttpHeaders headers = getHeaders();
+			HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+			ResponseEntity<String> response = restTemplate.exchange(finalURI.toString(), HttpMethod.POST, entity,
+					String.class);
+			token = response.getBody();
+		}catch(Exception e) {
+			System.out.println("Error in invoking favourite service: "+e.getMessage());
+			e.printStackTrace();
+		}
+		
 		return token;
 	}
 

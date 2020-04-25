@@ -34,7 +34,7 @@ public class UserServiceImpl implements IUserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	ServiceFacade serviceFacade;
 
@@ -44,12 +44,12 @@ public class UserServiceImpl implements IUserService {
 		UserDetails userDetails = null;
 		ApiResponse apiResponse = new ApiResponse();
 		if (userData != null) {
-			if(!StringUtils.isEmpty(userData.getEmailId())) {
+			if (!StringUtils.isEmpty(userData.getEmailId())) {
 				UserDetails userDetailsDB = userDetailsDAO.findByEmailId(userData.getEmailId());
-				if(userDetailsDB != null && !StringUtils.isEmpty(userDetailsDB.getEmailId())) {
+				if (userDetailsDB != null && !StringUtils.isEmpty(userDetailsDB.getEmailId())) {
 					apiResponse.setMessage("Email_id already exists");
 					apiResponse.setHttpStatus(HttpStatus.BAD_REQUEST.value());
-				}else {
+				} else {
 					userDetails = new UserDetails();
 					userDetails.setEmailId(userData.getEmailId());
 					userDetails.setFirstName(userData.getFirstName());
@@ -66,13 +66,12 @@ public class UserServiceImpl implements IUserService {
 					apiResponse.setMessage("User saved successfully");
 					apiResponse.setHttpStatus(HttpStatus.OK.value());
 				}
-						
-				
-			}else {
+
+			} else {
 				apiResponse.setMessage("Bad request");
 				apiResponse.setHttpStatus(HttpStatus.BAD_REQUEST.value());
 			}
-			
+
 		}
 		return apiResponse;
 	}
@@ -84,10 +83,17 @@ public class UserServiceImpl implements IUserService {
 		UserResponse userResponse = new UserResponse();
 		userResponse.setEmailId(credentials[0]);
 		userResponse.setUserAuthentic(false);
+		userResponse.setHttpStatus(HttpStatus.BAD_REQUEST.value());
 		UserDetails userDetails = userDetailsDAO.findByEmailId(credentials[0]);
 		if (userDetails != null && !StringUtils.isEmpty(userDetails.getEmailId())
 				&& passwordEncoder.matches(credentials[1], userDetails.getPassword())) {
 			userResponse.setUserAuthentic(true);
+			userResponse.setHttpStatus(HttpStatus.OK.value());
+			String fullName = userDetails.getFirstName();
+			if (!StringUtils.isEmpty(userDetails.getLastName())) {
+				fullName = fullName + " " + userDetails.getLastName();
+			}
+			userResponse.setFullName(fullName);
 			userResponse.setToken(serviceFacade.getJWTToken(credentials[0], credentials[1]));
 		}
 		return userResponse;
