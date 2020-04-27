@@ -31,7 +31,7 @@ public class UserControllerTest extends AbstractTest {
 	public void saveUser() throws Exception {
 		String uri = "/user";
 		UserData userData = new UserData();
-		userData.setEmailId("sachin25@gmail.com");
+		userData.setEmailId("sachin50@gmail.com");
 		userData.setFirstName("Sachin");
 		userData.setLastName("Tendulkar");
 		userData.setDob("25-12-1990");
@@ -48,9 +48,9 @@ public class UserControllerTest extends AbstractTest {
 		assertEquals(apiResponse.getMessage(), "User saved successfully");
 
 	}
-	
+
 	@Test
-	public void login() throws Exception{
+	public void login() throws Exception {
 		String uri = "/login";
 		MvcResult mvcResult = mvc.perform(
 				MockMvcRequestBuilders.post(uri).contentType(MediaType.APPLICATION_JSON_VALUE).headers(getHeaders()))
@@ -61,21 +61,40 @@ public class UserControllerTest extends AbstractTest {
 		UserResponse userResponse = super.mapFromJson(content, UserResponse.class);
 		assertEquals(userResponse.isUserAuthentic(), true);
 	}
-	
+
 	private HttpHeaders getHeaders() {
-		HttpHeaders headers = createHeaders("sachin@gmail.com","Password123");
+		HttpHeaders headers = createHeaders("sachin50@gmail.com", "Password123");
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		return headers;
 	}
-	
-	HttpHeaders createHeaders(String username, String password){
-		   return new HttpHeaders() {{
-		         String auth = username + ":" + password;
-		         byte[] encodedAuth = Base64.encodeBase64( 
-		            auth.getBytes(Charset.forName("US-ASCII")) );
-		         String authHeader = "Basic " + new String( encodedAuth );
-		         set( "Authorization", authHeader );
-		      }};
-		}
+
+	@Test
+	public void loginNegative() throws Exception {
+		String uri = "/login";
+		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+				.headers(getHeadersNegative())).andReturn();
+		int status = mvcResult.getResponse().getStatus();
+		assertEquals(400, status);
+		String content = mvcResult.getResponse().getContentAsString();
+		UserResponse userResponse = super.mapFromJson(content, UserResponse.class);
+		assertEquals(userResponse.isUserAuthentic(), false);
+	}
+
+	private HttpHeaders getHeadersNegative() {
+		HttpHeaders headers = createHeaders("sachin50@gmail.com", "Password12345");
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		return headers;
+	}
+
+	HttpHeaders createHeaders(String username, String password) {
+		return new HttpHeaders() {
+			{
+				String auth = username + ":" + password;
+				byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
+				String authHeader = "Basic " + new String(encodedAuth);
+				set("Authorization", authHeader);
+			}
+		};
+	}
 
 }
